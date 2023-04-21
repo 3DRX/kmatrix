@@ -25,6 +25,6 @@ KArray *KArr_subnum(const KArray *a, const KM_DATA b);
 KArray *KArr_mulnum(const KArray *a, const KM_DATA b);
 KArray *KArr_divnum(const KArray *a, const KM_DATA b);
 bool KArr_equal(const KArray *a, const KArray *b);
-KArray *KArr_reshape(KArray *a, const size_t shape0, const size_t shape1);
+KArray *KArr_reshape(const KArray *a, const size_t shape0, const size_t shape1);
 
 #endif

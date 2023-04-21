@@ -271,7 +271,7 @@ bool KArr_equal(const KArray *a, const KArray *b)
 	return true;
 }
 
-KArray *KArr_reshape(KArray *a, const size_t shape0, const size_t shape1)
+KArray *KArr_reshape(const KArray *a, const size_t shape0, const size_t shape1)
 {
 	KArray *newArr = KArr_zeros(shape0, shape1);
 	for (int i = 0; i < shape0 * shape1; i++) {
