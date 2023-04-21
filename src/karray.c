@@ -146,3 +146,111 @@ KMatrix *KArr_toKMat(const KArray *a)
 	}
 	return res;
 }
+
+KArray *KArr_add(const KArray *a, const KArray *b)
+{
+	if (a->shape0 != b->shape0 || a->shape1 != b->shape1) {
+		fprintf(stderr, "ERROR (KArr_add): shape mismatch\n");
+		return NULL;
+	}
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row,
+				 KArr_get(a, col, row) + KArr_get(b, col, row));
+		}
+	}
+	return res;
+}
+
+KArray *KArr_sub(const KArray *a, const KArray *b)
+{
+	if (a->shape0 != b->shape0 || a->shape1 != b->shape1) {
+		fprintf(stderr, "ERROR (KArr_sub): shape mismatch\n");
+		return NULL;
+	}
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row,
+				 KArr_get(a, col, row) - KArr_get(b, col, row));
+		}
+	}
+	return res;
+}
+
+KArray *KArr_mul(const KArray *a, const KArray *b)
+{
+	if (a->shape0 != b->shape0 || a->shape1 != b->shape1) {
+		fprintf(stderr, "ERROR (KArr_mul): shape mismatch\n");
+		return NULL;
+	}
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row,
+				 KArr_get(a, col, row) * KArr_get(b, col, row));
+		}
+	}
+	return res;
+}
+
+KArray *KArr_div(const KArray *a, const KArray *b)
+{
+	if (a->shape0 != b->shape0 || a->shape1 != b->shape1) {
+		fprintf(stderr, "ERROR (KArr_div): shape mismatch\n");
+		return NULL;
+	}
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row,
+				 KArr_get(a, col, row) / KArr_get(b, col, row));
+		}
+	}
+	return res;
+}
+
+KArray *KArr_addnum(const KArray *a, const KM_DATA b)
+{
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row, KArr_get(a, col, row) + b);
+		}
+	}
+	return res;
+}
+
+KArray *KArr_subnum(const KArray *a, const KM_DATA b)
+{
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row, KArr_get(a, col, row) - b);
+		}
+	}
+	return res;
+}
+
+KArray *KArr_mulnum(const KArray *a, const KM_DATA b)
+{
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row, KArr_get(a, col, row) * b);
+		}
+	}
+	return res;
+}
+
+KArray *KArr_divnum(const KArray *a, const KM_DATA b)
+{
+	KArray *res = KArr_zeros(a->shape0, a->shape1);
+	for (int col = 0; col < res->shape0; col++) {
+		for (int row = 0; row < res->shape1; row++) {
+			KArr_set(res, col, row, KArr_get(a, col, row) / b);
+		}
+	}
+	return res;
+}

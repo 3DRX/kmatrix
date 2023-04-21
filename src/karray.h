@@ -16,5 +16,13 @@ KArray *KArr_T(const KArray *a);
 void KArr_print(const KArray *a);
 KArray *KArr_dot(const KArray *x, const KArray *y);
 KMatrix *KArr_toKMat(const KArray *a);
+KArray *KArr_add(const KArray *a, const KArray *b);
+KArray *KArr_sub(const KArray *a, const KArray *b);
+KArray *KArr_mul(const KArray *a, const KArray *b);
+KArray *KArr_div(const KArray *a, const KArray *b);
+KArray *KArr_addnum(const KArray *a, const KM_DATA b);
+KArray *KArr_subnum(const KArray *a, const KM_DATA b);
+KArray *KArr_mulnum(const KArray *a, const KM_DATA b);
+KArray *KArr_divnum(const KArray *a, const KM_DATA b);
 
 #endif
