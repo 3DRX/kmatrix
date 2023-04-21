@@ -2,8 +2,9 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
-KMatrix *KMat_create(const size_t dim, const KM_DATA *value)
+KMatrix *KMat_create(const size_t dim, KM_DATA **value)
 {
 	KMatrix *res = (KMatrix *)malloc(sizeof(KMatrix));
 	res->dim = dim;
@@ -11,7 +12,21 @@ KMatrix *KMat_create(const size_t dim, const KM_DATA *value)
 	for (int i = 0; i < dim; i++) {
 		res->value[i] = (KM_DATA *)malloc(sizeof(KM_DATA) * dim);
 		for (int j = 0; j < dim; j++) {
-			res->value[i][j] = value[i * dim + j];
+			res->value[i][j] = *((KM_DATA *)value + dim * i + j);
+		}
+	}
+	return res;
+}
+
+KMatrix *KMat_copy(const KMatrix *m)
+{
+	KMatrix *res = (KMatrix *)malloc(sizeof(KMatrix));
+	res->dim = m->dim;
+	res->value = (KM_DATA **)malloc(sizeof(KM_DATA *) * m->dim);
+	for (int i = 0; i < m->dim; i++) {
+		res->value[i] = (KM_DATA *)malloc(sizeof(KM_DATA) * m->dim);
+		for (int j = 0; j < m->dim; j++) {
+			res->value[i][j] = m->value[i][j];
 		}
 	}
 	return res;
@@ -90,9 +105,9 @@ void KMat_print(const KMatrix *m)
 		printf("\t");
 		for (int row = 0; row < m->dim; row++) {
 			if (row == 0) {
-				printf("%lf", m->value[col][row]);
+				printf("%Lf", m->value[col][row]);
 			} else {
-				printf(" %lf", m->value[col][row]);
+				printf(" %Lf", m->value[col][row]);
 			}
 		}
 		printf("\n");
@@ -117,9 +132,100 @@ KMatrix *KMat_dot(const KMatrix *x, const KMatrix *y)
 	return res;
 }
 
+KM_DATA KMat_determinant(const KMatrix *m)
+{
+	if (m->dim == 1) {
+		return m->value[0][0];
+	}
+	KM_DATA s = 0;
+	KMatrix *subm = KMat_zeros(m->dim - 1);
+	int f = -1;
+	for (int k = 0; k < m->dim; k++) {
+		for (int i = 1; i < m->dim; i++) {
+			for (int j = 0; j < m->dim; j++) {
+				if (j < k) {
+					subm->value[i - 1][j] = m->value[i][j];
+				} else if (j > k) {
+					subm->value[i - 1][j - 1] =
+						m->value[i][j];
+				}
+			}
+		}
+		f = -f;
+		s += f * m->value[0][k] * KMat_determinant(subm);
+	}
+	KMat_delete(subm);
+	return s;
+}
+
 KMatrix *KMat_inverse(const KMatrix *m)
 {
-	// TODO
-	KMatrix *res = KMat_zeros(m->dim);
-	return res;
+	KMatrix *L = KMat_eye(m->dim);
+	KMatrix *U = KMat_zeros(m->dim);
+	for (int i = 0; i < m->dim; i++) {
+		U->value[0][i] = m->value[0][i];
+	}
+	// calculate L and U
+	for (int j = 0; j <= m->dim - 2; j++) {
+		for (int i = j + 1; i <= m->dim - 1; i++) {
+			L->value[i][j] = m->value[i][j];
+			for (int k = 0; k <= j - 1; k++) {
+				L->value[i][j] -=
+					L->value[i][k] * U->value[k][j];
+			}
+			L->value[i][j] /= U->value[j][j];
+		}
+		for (int i = j + 1; i <= m->dim - 1; i++) {
+			int i_u, j_u;
+			i_u = j + 1;
+			j_u = i;
+			U->value[i_u][j_u] = m->value[i_u][j_u];
+			for (int k = 0; k <= i_u - 1; k++) {
+				U->value[i_u][j_u] -=
+					L->value[i_u][k] * U->value[k][j_u];
+			}
+		}
+	}
+	KM_DATA nultmp = 1;
+	for (int i = 0; i < m->dim; i++) {
+		nultmp *= U->value[i][i];
+	}
+	if (nultmp == 0) {
+		return NULL;
+	}
+	printf("L:\n");
+	KMat_print(L);
+	printf("U:\n");
+	KMat_print(U);
+	// calculate LI and UI (inverse of L and U)
+	KMatrix *LI = KMat_eye(m->dim);
+	KMatrix *UI = KMat_zeros(m->dim);
+	for (int i = 0; i < m->dim; i++) {
+		UI->value[i][i] = 1 / U->value[i][i];
+		for (int k = i - 1; k >= 0; k--) {
+			int s = 0;
+			for (int j = k + 1; j <= i; j++) {
+				s += U->value[k][j] * UI->value[j][i];
+			}
+			UI->value[k][i] = -s / U->value[k][k];
+		}
+	}
+	for (int i = 0; i < m->dim; i++) {
+		for (int k = i + 1; k < m->dim; k++) {
+			for (int j = i; j <= k - 1; j++)
+				LI->value[k][i] -=
+					L->value[k][j] * LI->value[j][i];
+		}
+	}
+	// TODO: LI is correct, UI is not
+	KMat_delete(L);
+	KMat_delete(U);
+	KMatrix *mI = KMat_dot(UI, LI);
+	printf("LI:\n");
+	KMat_print(LI);
+	printf("UI:\n");
+	KMat_print(UI);
+	KMat_delete(LI);
+	KMat_delete(UI);
+	return mI;
 }
