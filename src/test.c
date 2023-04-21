@@ -1,5 +1,3 @@
-#include "datastructs.h"
-#include "karray.h"
 #include "kmatrix.h"
 #include <stdio.h>
 #include <stdlib.h>

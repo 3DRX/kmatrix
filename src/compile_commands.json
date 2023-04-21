@@ -4,36 +4,6 @@
       "/usr/bin/gcc",
       "-c",
       "-Wall",
-      "datastructs.h"
-    ],
-    "directory": "/home/kjy/Documents/KMatrix/src",
-    "file": "/home/kjy/Documents/KMatrix/src/datastructs.h"
-  },
-  {
-    "arguments": [
-      "/usr/bin/gcc",
-      "-c",
-      "-Wall",
-      "karray.c"
-    ],
-    "directory": "/home/kjy/Documents/KMatrix/src",
-    "file": "/home/kjy/Documents/KMatrix/src/karray.c"
-  },
-  {
-    "arguments": [
-      "/usr/bin/gcc",
-      "-c",
-      "-Wall",
-      "karray.h"
-    ],
-    "directory": "/home/kjy/Documents/KMatrix/src",
-    "file": "/home/kjy/Documents/KMatrix/src/karray.h"
-  },
-  {
-    "arguments": [
-      "/usr/bin/gcc",
-      "-c",
-      "-Wall",
       "kmatrix.c"
     ],
     "directory": "/home/kjy/Documents/KMatrix/src",
