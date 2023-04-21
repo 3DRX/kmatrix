@@ -11,5 +11,7 @@ int main(int argc, char *argv[])
 	KMatrix *res = KMat_inverse(m);
 	printf("res:\n");
 	KMat_print(res);
+	KMat_delete(res);
+	KMat_delete(m);
 	return EXIT_SUCCESS;
 }

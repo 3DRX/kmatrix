@@ -1,14 +1,7 @@
 #ifndef KMATRIX
 #define KMATRIX
 
-#include <stddef.h>
-
-#define KM_DATA long double
-
-typedef struct {
-	size_t dim;
-	KM_DATA **value;
-} KMatrix;
+#include "datastructs.h"
 
 KMatrix *KMat_create(const size_t dim, KM_DATA **value);
 KMatrix *KMat_copy(const KMatrix *m);
@@ -21,5 +14,6 @@ void KMat_print(const KMatrix *m);
 KMatrix *KMat_dot(const KMatrix *x, const KMatrix *y);
 KMatrix *KMat_inverse(const KMatrix *m);
 KM_DATA KMat_determinant(const KMatrix *m);
+KArray *toKArray(const KMatrix *m);
 
 #endif
