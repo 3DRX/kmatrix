@@ -1,4 +1,5 @@
 #include "kmatrix.h"
+#include <math.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -156,6 +157,84 @@ KM_DATA KMat_determinant(const KMatrix *m)
 	}
 	KMat_delete(subm);
 	return s;
+}
+
+KM_DATA KMat_trace(const KMatrix *m)
+{
+	KM_DATA tr = 0;
+	for (int i = 0; i < m->dim; i++) {
+		tr += m->value[i][i];
+	}
+	return tr;
+}
+
+size_t KMat_rank(const KMatrix *m)
+{
+	// TODO
+}
+
+KM_DATA KMat_norm(const KMatrix *m)
+{
+	// TODO
+}
+
+KM_DATA KMat_sum(const KMatrix *m)
+{
+	KM_DATA s = 0;
+	for (int i = 0; i < m->dim; i++) {
+		for (int j = 0; j < m->dim; j++) {
+			s += m->value[i][j];
+		}
+	}
+	return s;
+}
+
+KM_DATA KMat_mean(const KMatrix *m)
+{
+	return KMat_sum(m) / (m->dim * m->dim);
+}
+
+KM_DATA KMat_var(const KMatrix *m)
+{
+	KM_DATA mean = KMat_mean(m);
+	KM_DATA s = 0;
+	for (int i = 0; i < m->dim; i++) {
+		for (int j = 0; j < m->dim; j++) {
+			s += (m->value[i][j] - mean) * (m->value[i][j] - mean);
+		}
+	}
+	return s / (m->dim * m->dim);
+}
+
+KM_DATA KMat_std(const KMatrix *m)
+{
+	return sqrt(KMat_var(m));
+}
+
+KM_DATA KMat_min(const KMatrix *m)
+{
+	KM_DATA min = m->value[0][0];
+	for (int i = 0; i < m->dim; i++) {
+		for (int j = 0; j < m->dim; j++) {
+			if (m->value[i][j] < min) {
+				min = m->value[i][j];
+			}
+		}
+	}
+	return min;
+}
+
+KM_DATA KMat_max(const KMatrix *m)
+{
+	KM_DATA max = m->value[0][0];
+	for (int i = 0; i < m->dim; i++) {
+		for (int j = 0; j < m->dim; j++) {
+			if (m->value[i][j] > max) {
+				max = m->value[i][j];
+			}
+		}
+	}
+	return max;
 }
 
 // L Matrix inverse
@@ -525,4 +604,60 @@ KArray *KArr_reshape(const KArray *a, const size_t shape0, const size_t shape1)
 		}
 	}
 	return newArr;
+}
+
+KM_DATA KArr_sum(const KArray *a)
+{
+	KM_DATA sum = 0;
+	for (int i = 0; i < a->shape0 * a->shape1; i++) {
+		sum += a->value[i];
+	}
+	return sum;
+}
+
+KM_DATA KArr_mean(const KArray *a)
+{
+	return KArr_sum(a) / (a->shape0 * a->shape1);
+}
+
+KM_DATA KArr_var(const KArray *a)
+{
+	KM_DATA mean = KArr_mean(a);
+	KM_DATA var = 0;
+	for (int i = 0; i < a->shape0 * a->shape1; i++) {
+		var += (a->value[i] - mean) * (a->value[i] - mean);
+	}
+	return var / (a->shape0 * a->shape1);
+}
+
+KM_DATA KArr_std(const KArray *a)
+{
+	return sqrt(KArr_var(a));
+}
+
+KM_DATA KArr_min(const KArray *a)
+{
+	KM_DATA min = a->value[0];
+	for (int i = 0; i < a->shape0 * a->shape1; i++) {
+		if (a->value[i] < min) {
+			min = a->value[i];
+		}
+	}
+	return min;
+}
+
+KM_DATA KArr_max(const KArray *a)
+{
+	KM_DATA max = a->value[0];
+	for (int i = 0; i < a->shape0 * a->shape1; i++) {
+		if (a->value[i] > max) {
+			max = a->value[i];
+		}
+	}
+	return max;
+}
+
+size_t KArr_rank(const KArray *a)
+{
+	// TODO
 }
