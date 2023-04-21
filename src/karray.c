@@ -254,3 +254,32 @@ KArray *KArr_divnum(const KArray *a, const KM_DATA b)
 	}
 	return res;
 }
+
+bool KArr_equal(const KArray *a, const KArray *b)
+{
+	if (a->shape0 != b->shape0 || a->shape1 != b->shape1) {
+		fprintf(stderr, "ERROR (KArr_equal): shape mismatch\n");
+		return false;
+	}
+	for (int col = 0; col < a->shape0; col++) {
+		for (int row = 0; row < a->shape1; row++) {
+			if (KArr_get(a, col, row) != KArr_get(b, col, row)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+KArray *KArr_reshape(KArray *a, const size_t shape0, const size_t shape1)
+{
+	KArray *newArr = KArr_zeros(shape0, shape1);
+	for (int i = 0; i < shape0 * shape1; i++) {
+		if (i < a->shape0 * a->shape1) {
+			newArr->value[i] = a->value[i];
+		} else {
+			newArr->value[i] = 0;
+		}
+	}
+	return newArr;
+}
