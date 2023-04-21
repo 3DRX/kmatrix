@@ -14,6 +14,6 @@ void KMat_print(const KMatrix *m);
 KMatrix *KMat_dot(const KMatrix *x, const KMatrix *y);
 KMatrix *KMat_inverse(const KMatrix *m);
 KM_DATA KMat_determinant(const KMatrix *m);
-KArray *toKArray(const KMatrix *m);
+KArray *KMat_toKArr(const KMatrix *m);
 
 #endif

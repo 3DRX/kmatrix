@@ -1,4 +1,6 @@
 #include "kmatrix.h"
+#include "datastructs.h"
+#include "karray.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -234,4 +236,16 @@ KMatrix *KMat_inverse(const KMatrix *m)
 	KMat_delete(LI);
 	KMat_delete(UI);
 	return mI;
+}
+
+KArray *KMat_toKArr(const KMatrix *m)
+{
+	// TODO: test this
+	KArray *res = KArr_zeros(m->dim, m->dim);
+	for (int i = 0; i < m->dim; i++) {
+		for (int j = 0; j < m->dim; j++) {
+			KArr_set(res, i, j, m->value[i][j]);
+		}
+	}
+	return res;
 }

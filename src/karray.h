@@ -15,6 +15,6 @@ void KArr_delete(KArray *a);
 KArray *KArr_T(const KArray *a);
 void KArr_print(const KArray *a);
 KArray *KArr_dot(const KArray *x, const KArray *y);
-KMatrix *toKMatrix(const KArray *a);
+KMatrix *KArr_toKMat(const KArray *a);
 
 #endif

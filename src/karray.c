@@ -132,7 +132,7 @@ KArray *KArr_dot(const KArray *a, const KArray *b)
 	return res;
 }
 
-KMatrix *toMatrix(const KArray *a)
+KMatrix *KArr_toKMat(const KArray *a)
 {
 	if (a->shape1 != a->shape0) {
 		fprintf(stderr, "ERROR (toMatrix): not square\n");

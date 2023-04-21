@@ -1,17 +1,18 @@
+#include "datastructs.h"
+#include "karray.h"
 #include "kmatrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(int argc, char *argv[])
 {
-	KM_DATA a[3][3] = { { 2, 5, 8 }, { 8, 0, 1 }, { 6, 2, 8 } };
-	KMatrix *m = KMat_create(3, (KM_DATA **)a);
-	printf("m:\n");
-	KMat_print(m);
-	KMatrix *res = KMat_inverse(m);
-	printf("res:\n");
-	KMat_print(res);
-	KMat_delete(res);
-	KMat_delete(m);
+	KArray *a = KArr_create(2, 2, (KM_DATA[]){ 1, 2, 3, 4 });
+	KArr_print(a);
+	KArray *b = KArr_T(a);
+	KArr_print(b);
+	KArray *c = KArr_dot(a, b);
+	KArr_print(c);
+	KMatrix *d = KArr_toKMat(c);
+	KMat_print(d);
 	return EXIT_SUCCESS;
 }
