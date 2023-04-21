@@ -158,6 +158,24 @@ KM_DATA KMat_determinant(const KMatrix *m)
 	return s;
 }
 
+// L Matrix inverse
+KMatrix *L_inverse(const KMatrix *m)
+{
+	KMatrix *res = KMat_zeros(m->dim);
+	for (int i = 1; i <= m->dim; i++) {
+		res->value[i - 1][i - 1] = 1 / m->value[i - 1][i - 1];
+		for (int j = 1; j <= i - 1; j++) {
+			KM_DATA s = 0;
+			for (int k = j; k <= i - 1; k++) {
+				s += m->value[i - 1][k - 1] *
+				     res->value[k - 1][j - 1];
+			}
+			res->value[i - 1][j - 1] = -s * m->value[i - 1][i - 1];
+		}
+	}
+	return res;
+}
+
 KMatrix *KMat_inverse(const KMatrix *m)
 {
 	KMatrix *L = KMat_eye(m->dim);
@@ -197,19 +215,8 @@ KMatrix *KMat_inverse(const KMatrix *m)
 	KMat_print(L);
 	printf("U:\n");
 	KMat_print(U);
-	// calculate LI and UI (inverse of L and U)
+	// calculate LI(inverse of L)
 	KMatrix *LI = KMat_eye(m->dim);
-	KMatrix *UI = KMat_zeros(m->dim);
-	for (int i = 0; i < m->dim; i++) {
-		UI->value[i][i] = 1 / U->value[i][i];
-		for (int k = i - 1; k >= 0; k--) {
-			int s = 0;
-			for (int j = k + 1; j <= i; j++) {
-				s += U->value[k][j] * UI->value[j][i];
-			}
-			UI->value[k][i] = -s / U->value[k][k];
-		}
-	}
 	for (int i = 0; i < m->dim; i++) {
 		for (int k = i + 1; k < m->dim; k++) {
 			for (int j = i; j <= k - 1; j++)
@@ -217,7 +224,12 @@ KMatrix *KMat_inverse(const KMatrix *m)
 					L->value[k][j] * LI->value[j][i];
 		}
 	}
-	// TODO: LI is correct, UI is not
+	// calculate UI
+	KMatrix *UT = KMat_T(U);
+	KMatrix *UTI = L_inverse(UT);
+	KMatrix *UI = KMat_T(UTI);
+	KMat_delete(UT);
+	KMat_delete(UTI);
 	KMat_delete(L);
 	KMat_delete(U);
 	KMatrix *mI = KMat_dot(UI, LI);
