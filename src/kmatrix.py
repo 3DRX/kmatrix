@@ -38,6 +38,108 @@ class KMatrix(ctypes.Structure):
     def eye(dim):
         return KMatrix(dim, type="eye")
 
+    def copy(self):
+        KMat_copy = C_library.KMat_copy
+        KMat_copy.restype = ctypes.POINTER(KMatrix)
+        tmp = KMat_copy(self.obj)
+        return KMatrix(
+            tmp.contents.dim,
+            type="obj",
+            values=tmp
+        )
+
+    def T(self):
+        KMat_T = C_library.KMat_T
+        KMat_T.restype = ctypes.POINTER(KMatrix)
+        tmp = KMat_T(self.obj)
+        return KMatrix(
+            tmp.contents.dim,
+            type="obj",
+            values=tmp
+        )
+
+    def dot(self, other):
+        KMat_dot = C_library.KMat_dot
+        KMat_dot.restype = ctypes.POINTER(KMatrix)
+        tmp = KMat_dot(self.obj, other.obj)
+        return KMatrix(
+            tmp.contents.dim,
+            type="obj",
+            values=tmp
+        )
+
+    def inv(self):
+        KMat_inverse = C_library.KMat_inverse
+        KMat_inverse.restype = ctypes.POINTER(KMatrix)
+        tmp = KMat_inverse(self.obj)
+        if not tmp:
+            raise Exception("Matrix is singular")
+        return KMatrix(
+            tmp.contents.dim,
+            type="obj",
+            values=tmp
+        )
+
+    def det(self):
+        KMat_determinant = C_library.KMat_determinant
+        KMat_determinant.restype = ctypes.c_longdouble
+        return KMat_determinant(self.obj)
+
+    def trace(self):
+        KMat_trace = C_library.KMat_trace
+        KMat_trace.restype = ctypes.c_longdouble
+        return KMat_trace(self.obj)
+
+    def rank(self):
+        KMat_rank = C_library.KMat_rank
+        KMat_rank.restype = ctypes.c_size_t
+        return KMat_rank(self.obj)
+
+    def norm(self):
+        KMat_norm = C_library.KMat_norm
+        KMat_norm.restype = ctypes.c_longdouble
+        return KMat_norm(self.obj)
+
+    def sum(self):
+        KMat_sum = C_library.KMat_sum
+        KMat_sum.restype = ctypes.c_longdouble
+        return KMat_sum(self.obj)
+
+    def mean(self):
+        KMat_mean = C_library.KMat_mean
+        KMat_mean.restype = ctypes.c_longdouble
+        return KMat_mean(self.obj)
+
+    def var(self):
+        KMat_var = C_library.KMat_var
+        KMat_var.restype = ctypes.c_longdouble
+        return KMat_var(self.obj)
+
+    def std(self):
+        KMat_std = C_library.KMat_std
+        KMat_std.restype = ctypes.c_longdouble
+        return KMat_std(self.obj)
+
+    def min(self):
+        KMat_min = C_library.KMat_min
+        KMat_min.restype = ctypes.c_longdouble
+        return KMat_min(self.obj)
+
+    def max(self):
+        KMat_max = C_library.KMat_max
+        KMat_max.restype = ctypes.c_longdouble
+        return KMat_max(self.obj)
+
+    def toKArray(self):
+        KMat_toKArr = C_library.KMat_toKArr
+        KMat_toKArr.restype = ctypes.POINTER(KArray)
+        tmp = KMat_toKArr(self.obj)
+        return KArray(
+            (tmp.contents.shape0, tmp.contents.shape1),
+            type="obj",
+            values=tmp
+        )
+
     def display(self):
         C_library.KMat_print(self.obj)
         pass
@@ -128,7 +230,7 @@ class KArray(ctypes.Structure):
             values=tmp
         )
 
-    def toKMat(self):
+    def toKMatrix(self):
         KArr_toKMat = C_library.KArr_toKMat
         KArr_toKMat.restype = ctypes.POINTER(KMatrix)
         tmp = KArr_toKMat(self.obj)
