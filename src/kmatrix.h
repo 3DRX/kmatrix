@@ -17,6 +17,7 @@ typedef struct {
     KM_DATA *value;
 } KArray;
 
+// create a KMatrix
 KMatrix *KMat_create(const size_t dim, KM_DATA **value);
 // deep copy of a KMatrix
 KMatrix *KMat_copy(const KMatrix *m);
