@@ -1,5 +1,5 @@
-import ctypes
 from __future__ import annotations
+import ctypes
 
 C_library = ctypes.CDLL("./libkmatrix.so")
 
