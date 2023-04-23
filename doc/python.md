@@ -60,11 +60,6 @@ Get the rank of a KMatrix
 rank(self) -> int:
 ```
 
-Get the norm of a KMatrix
-```python3
-norm(self) -> float:
-```
-
 Get the sum of all elements of a KMatrix
 ```python3
 sum(self) -> float:

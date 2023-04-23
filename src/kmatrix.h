@@ -43,8 +43,6 @@ KM_DATA KMat_determinant(const KMatrix *m);
 KM_DATA KMat_trace(const KMatrix *m);
 // get the rank of a KMatrix
 size_t KMat_rank(const KMatrix *m);
-// get the norm of a KMatrix
-KM_DATA KMat_norm(const KMatrix *m);
 // get the sum of all elements of a KMatrix
 KM_DATA KMat_sum(const KMatrix *m);
 // get the mean of all elements of a KMatrix

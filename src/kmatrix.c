@@ -283,11 +283,6 @@ size_t KMat_rank(const KMatrix *m)
 	return rank;
 }
 
-KM_DATA KMat_norm(const KMatrix *m)
-{
-	// TODO
-}
-
 KM_DATA KMat_sum(const KMatrix *m)
 {
 	KM_DATA s = 0;

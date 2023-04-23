@@ -96,11 +96,6 @@ class KMatrix(ctypes.Structure):
         KMat_rank.restype = ctypes.c_size_t
         return KMat_rank(self.obj)
 
-    def norm(self) -> float:
-        KMat_norm = C_library.KMat_norm
-        KMat_norm.restype = ctypes.c_longdouble
-        return KMat_norm(self.obj)
-
     def sum(self) -> float:
         KMat_sum = C_library.KMat_sum
         KMat_sum.restype = ctypes.c_longdouble
@@ -211,7 +206,6 @@ class KArray(ctypes.Structure):
                 line.extend([0] * (maxlen - len(line)))
                 pass
             flatvalues = [item for sublist in values for item in sublist]
-            print(flatvalues)
             return KArray(
                 (len(values), len(values[0])),
                 type="values",

@@ -95,11 +95,6 @@ Get the rank of a KMatrix
 size_t KMat_rank(const KMatrix *m);
 ```
 
-Get the norm of a KMatrix
-```c
-KM_DATA KMat_norm(const KMatrix *m);
-```
-
 Get the sum of all elements of a KMatrix
 ```c
 KM_DATA KMat_sum(const KMatrix *m);
