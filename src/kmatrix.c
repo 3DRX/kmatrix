@@ -4,6 +4,81 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
+
+// start none global functions
+
+void KArr_swap_row(const KArray *a, const size_t row1, const size_t row2)
+{
+	if (row1 >= a->shape0 || row2 >= a->shape0 || row1 < 0 || row2 < 0) {
+		fprintf(stderr,
+			"ERROR (KArr_swap_row): row index out of range");
+		return;
+	}
+	KM_DATA tmp;
+	for (size_t i = 0; i < a->shape1; i++) {
+		tmp = KArr_get(a, row1, i);
+		KArr_set(a, row1, i, KArr_get(a, row2, i));
+		KArr_set(a, row2, i, tmp);
+	}
+}
+
+void KArr_swap_col(const KArray *a, const size_t col1, const size_t col2)
+{
+	if (col1 >= a->shape1 || col2 >= a->shape1 || col1 < 0 || col2 < 0) {
+		fprintf(stderr,
+			"ERROR (KArr_swap_col): col index out of range");
+		return;
+	}
+	KM_DATA tmp;
+	for (size_t i = 0; i < a->shape0; i++) {
+		tmp = KArr_get(a, i, col1);
+		KArr_set(a, i, col1, KArr_get(a, i, col2));
+		KArr_set(a, i, col2, tmp);
+	}
+}
+
+void KMat_swap_row(const KMatrix *a, const size_t row1, const size_t row2)
+{
+	if (row1 >= a->dim || row2 >= a->dim || row1 < 0 || row2 < 0) {
+		fprintf(stderr,
+			"ERROR (KMat_swap_row): row index out of range");
+		return;
+	}
+	KM_DATA tmp;
+	for (size_t i = 0; i < a->dim; i++) {
+		tmp = a->value[row1][i];
+		a->value[row1][i] = a->value[row2][i];
+		a->value[row2][i] = tmp;
+	}
+}
+
+void KMat_swap_col(const KMatrix *a, const size_t col1, const size_t col2)
+{
+	if (col1 >= a->dim || col2 >= a->dim || col1 < 0 || col2 < 0) {
+		fprintf(stderr,
+			"ERROR (KMat_swap_col): col index out of range");
+		return;
+	}
+	KM_DATA tmp;
+	for (size_t i = 0; i < a->dim; i++) {
+		tmp = a->value[i][col1];
+		a->value[i][col1] = a->value[i][col2];
+		a->value[i][col2] = tmp;
+	}
+}
+
+KM_DATA *KArr_at(const KArray *a, const size_t col, const size_t row)
+{
+	if (col >= 0 && col < a->shape0 && row >= 0 && row <= a->shape1) {
+		return &a->value[col * a->shape1 + row];
+	} else {
+		fprintf(stderr, "ERROR (KArr_at): index out of range\n");
+		return false;
+	}
+}
+
+// end non global functions
 
 KMatrix *KMat_create(const size_t dim, KM_DATA **value)
 {
@@ -170,7 +245,42 @@ KM_DATA KMat_trace(const KMatrix *m)
 
 size_t KMat_rank(const KMatrix *m)
 {
-	// TODO
+	KMatrix *tmp = KMat_copy(m);
+	size_t rank = tmp->dim;
+	for (size_t row = 0; row < rank; row++) {
+		if (tmp->value[row][row] != 0) {
+			for (size_t col = 0; col < tmp->dim; col++) {
+				if (col != row) {
+					KM_DATA mult = tmp->value[col][row] /
+						       tmp->value[row][row];
+					for (size_t i = 0; i < rank; i++) {
+						tmp->value[col][i] -=
+							mult *
+							tmp->value[row][i];
+					}
+				}
+			}
+		} else {
+			bool reduce = true;
+			for (size_t i = row + 1; i < tmp->dim; i++) {
+				if (tmp->value[i][row] != 0) {
+					KMat_swap_row(tmp, row, i);
+					reduce = false;
+					break;
+				}
+			}
+			if (reduce) {
+				rank--;
+				for (size_t i = 0; i < tmp->dim; i++) {
+					tmp->value[i][row] =
+						tmp->value[i][rank];
+				}
+			}
+			row--;
+		}
+	}
+	KMat_delete(tmp);
+	return rank;
 }
 
 KM_DATA KMat_norm(const KMatrix *m)
@@ -317,7 +427,6 @@ KMatrix *KMat_inverse(const KMatrix *m)
 
 KArray *KMat_toKArr(const KMatrix *m)
 {
-	// TODO: test this
 	KArray *res = KArr_zeros(m->dim, m->dim);
 	for (int i = 0; i < m->dim; i++) {
 		for (int j = 0; j < m->dim; j++) {
@@ -659,5 +768,40 @@ KM_DATA KArr_max(const KArray *a)
 
 size_t KArr_rank(const KArray *a)
 {
-	// TODO
+	KArray *tmp = KArr_copy(a);
+	size_t rank = tmp->shape0;
+	for (size_t row = 0; row < rank; row++) {
+		if (KArr_get(tmp, row, row) != 0) {
+			for (size_t col = 0; col < tmp->shape0; col++) {
+				if (col != row) {
+					KM_DATA mult = KArr_get(tmp, col, row) /
+						       KArr_get(tmp, row, row);
+					for (size_t i = 0; i < rank; i++) {
+						*KArr_at(tmp, col, i) -=
+							mult *
+							KArr_get(tmp, row, i);
+					}
+				}
+			}
+		} else {
+			bool reduce = true;
+			for (size_t i = row + 1; i < tmp->shape0; i++) {
+				if (KArr_get(tmp, i, row) != 0) {
+					KArr_swap_row(tmp, row, i);
+					reduce = false;
+					break;
+				}
+			}
+			if (reduce) {
+				rank--;
+				for (size_t i = 0; i < tmp->shape0; i++) {
+					KArr_set(tmp, i, row,
+						 KArr_get(tmp, i, rank));
+				}
+			}
+			row--;
+		}
+	}
+	KArr_delete(tmp);
+	return rank;
 }
