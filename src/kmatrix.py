@@ -185,8 +185,41 @@ class KArray(ctypes.Structure):
     def ones(shape: tuple(int, int)) -> KArray:
         return KArray(shape, type="ones")
 
-    def from_values(shape: tuple(int, int), values: list[float]) -> KArray:
-        return KArray(shape, type="values", values=values)
+    # # deprecated
+    # def from_values(shape: tuple(int, int), values: list[float]) -> KArray:
+    #     if type(values[0]) == type(float):
+    #         if shape[0] * shape[1] > len(values):
+    #             # extend values with 0
+    #             values.extend([0] * (shape[0] * shape[1] - len(values)))
+    #             pass
+    #         pass
+    #     else:
+    #         raise Exception("Values must be a list of float")
+    #     return KArray(shape, type="values", values=values)
+
+    def from_2darray(values: list[list[float]]) -> KArray:
+        if type(values) != list[list[float]]:
+            # extend and flatten values
+            maxlen = 0
+            for line in values:
+                ll = len(line)
+                if ll > maxlen:
+                    maxlen = ll
+                    pass
+                pass
+            for line in values:
+                line.extend([0] * (maxlen - len(line)))
+                pass
+            flatvalues = [item for sublist in values for item in sublist]
+            print(flatvalues)
+            return KArray(
+                (len(values), len(values[0])),
+                type="values",
+                values=flatvalues
+            )
+        else:
+            raise Exception("Values must be a 2d list of float")
+        pass
 
     def copy(self) -> KArray:
         KArr_copy = C_library.KArr_copy

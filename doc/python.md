@@ -4,6 +4,10 @@
 
 All the functions doesn't make changes in-place.
 
+**Note**: Although one can call `KMatrix(...)` or `KArray(...)`
+to create a new instance, this is not recommended.
+Instead, use functions such as `ones()` and `from_2darray()`
+
 ## `KMatrix`
 
 Create KMatrix filled with 0
@@ -113,9 +117,11 @@ Create a KArray with all elements set to 1
 ones(shape: tuple(int, int)) -> KArray:
 ```
 
-Create a KArray
+Create a KArray from a 2d list,
+if the length of each sub-lists mismatch,
+this will extend short sub-lists with 0
 ```python3
-from_values(shape: tuple(int, int), values: list[float]) -> KArray:
+from_2darray(values: list[list[float]]) -> KArray:
 ```
 
 Set the value of a KArray at (col, row)

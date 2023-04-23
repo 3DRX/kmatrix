@@ -1,7 +1,13 @@
 from kmatrix import KArray
 
 if __name__ == "__main__":
-    kr = KArray.from_values((3, 3), [1, 5, 3, 5, 7, 5, 3, 3, 2])
+    kr = KArray.from_2darray(
+        [
+            [1, 2, 3],
+            [6, 3, 7],
+            [10, 345, 7]
+        ]
+    )
     kr.display()
     kr.toKMatrix()\
         .inv()\
