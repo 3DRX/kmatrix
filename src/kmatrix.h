@@ -7,14 +7,14 @@
 #define KM_DATA long double
 
 typedef struct {
-    size_t dim;
-    KM_DATA **value;
+	size_t dim;
+	KM_DATA **value;
 } KMatrix;
 
 typedef struct {
-    size_t shape0;
-    size_t shape1;
-    KM_DATA *value;
+	size_t shape0;
+	size_t shape1;
+	KM_DATA *value;
 } KArray;
 
 // create a KMatrix
@@ -68,7 +68,7 @@ KArray *KArr_zeros(const size_t shape0, const size_t shape1);
 KArray *KArr_ones(const size_t shape0, const size_t shape1);
 // set the value of a KArray at (col, row)
 bool KArr_set(const KArray *a, const size_t col, const size_t row,
-        KM_DATA value);
+	      KM_DATA value);
 // get the value of a KArray at (col, row)
 KM_DATA KArr_get(const KArray *a, const size_t col, const size_t row);
 // delete a KArray
