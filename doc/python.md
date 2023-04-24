@@ -10,6 +10,14 @@ Instead, use functions such as `ones()` and `from_2darray()`
 
 ## `KMatrix`
 
+**Operators reloaded**
+
+`@` for multiply two KArrays if they are multiplieable.
+
+Other operators such as `+` and `-` are only supported in [KArray](#KArray).
+
+**Functions**
+
 Create KMatrix filled with 0
 ```python3
 zeros(dim: int) -> KMatrix:
@@ -101,6 +109,20 @@ display(self) -> None:
 ```
 
 ## `KArray`
+
+**Operators reloaded**
+
+`+` and `+=` operator for adding two KArrays of the same shape
+of adding all the elements of a KArray by the same number.
+
+`-` and `-=`, `*` and `*=` `/` and `/=` are similar.
+
+`@` for multiply two KArrays if they are multiplieable.
+
+`==` and `!=` to check if all the elements of the same
+position in two KArrays are the same.
+
+**Functions**
 
 Create a KArray with all elements set to 0
 ```python3
