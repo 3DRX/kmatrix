@@ -9,5 +9,6 @@ if __name__ == "__main__":
         ]
     )
     kr.display()
-    print(kr.toKMatrix().rank())
+    kr += 1
+    kr.display()
     pass

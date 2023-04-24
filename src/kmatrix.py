@@ -139,6 +139,9 @@ class KMatrix(ctypes.Structure):
     def display(self) -> None:
         C_library.KMat_print(self.obj)
         pass
+
+    def __matmul__(self, other: KMatrix) -> KMatrix:
+        return self.dot(other)
     pass
 
 
@@ -411,5 +414,45 @@ class KArray(ctypes.Structure):
 
     def display(self) -> None:
         C_library.KArr_print(self.obj)
+        pass
+
+    def __add__(self, other: KArray | float | int) -> KArray:
+        if isinstance(other, (float, int)):
+            return self.addnum(other)
+        else:
+            return self.add(other)
+        pass
+
+    def __sub__(self, other: KArray | float | int) -> KArray:
+        if isinstance(other, (float, int)):
+            return self.subnum(other)
+        else:
+            return self.sub(other)
+        pass
+
+    def __mul__(self, other: KArray | float | int) -> KArray:
+        if isinstance(other, (float, int)):
+            return self.mulnum(other)
+        else:
+            return self.mul(other)
+        pass
+
+    def __truediv__(self, other: KArray | float | int) -> KArray:
+        if isinstance(other, (float, int)):
+            return self.divnum(other)
+        else:
+            return self.div(other)
+        pass
+
+    def __eq__(self, other: KArray) -> bool:
+        return self.equals(other)
+        pass
+
+    def __ne__(self, other: KArray) -> bool:
+        return not self.equals(other)
+        pass
+
+    def __matmul__(self, other: KArray) -> KArray:
+        return self.dot(other)
         pass
     pass
